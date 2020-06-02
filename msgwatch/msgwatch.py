@@ -62,33 +62,34 @@ class MsgWatch(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, ctx):
-        settings = await self.config.guild(ctx.guild).all()
-        if ctx.author.bot:
-            return
-        if ctx.guild is None:
-            return
-        if ctx.author.id in settings["monitored_users"]:
-            embed = discord.Embed(
-                title = f"[MONITORED USER] {ctx.author.mention} ({ctx.author.id})",
-                description = ctx.content,
-                timestamp = datetime.utcnow()
-            )
-            await ctx.guild.get_channel(settings["log_channel"]).send(embed=embed)
-
-        user_mentions = ctx.mentions
-        if len(user_mentions) > 0:
-            mentioned = False
-            for user in user_mentions:
-                roles = user.roles
-                for role in roles:
-                    if role.id in settings["roles"]:
-                        embed = discord.Embed(
-                            title = f"[MEMBER MENTION] {ctx.author.mention} ({ctx.author.id})",
-                            description = ctx.content,
-                            timestamp = datetime.utcnow()
-                        )
-                        await ctx.guild.get_channel(settings["log_channel"]).send(embed=embed)
-                        mentioned = True
+        if ctx.guild:
+            settings = await self.config.guild(ctx.guild).all()
+            if ctx.author.bot:
+                return
+            if ctx.guild is None:
+                return
+            if ctx.author.id in settings["monitored_users"]:
+                embed = discord.Embed(
+                    title = f"[MONITORED USER] {ctx.author.mention} ({ctx.author.id})",
+                    description = ctx.content,
+                    timestamp = datetime.utcnow()
+                )
+                await ctx.guild.get_channel(settings["log_channel"]).send(embed=embed)
+    
+            user_mentions = ctx.mentions
+            if len(user_mentions) > 0:
+                mentioned = False
+                for user in user_mentions:
+                    roles = user.roles
+                    for role in roles:
+                        if role.id in settings["roles"]:
+                            embed = discord.Embed(
+                                title = f"[MEMBER MENTION] {ctx.author.mention} ({ctx.author.id})",
+                                description = ctx.content,
+                                timestamp = datetime.utcnow()
+                            )
+                            await ctx.guild.get_channel(settings["log_channel"]).send(embed=embed)
+                            mentioned = True
+                            break
+                    if mentioned:
                         break
-                if mentioned:
-                    break
