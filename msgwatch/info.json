@@ -1,0 +1,10 @@
+{
+    "author": ["Woovie"],
+    "install_msg": "Ensure your settings are properly configured for logging.",
+    "name": "MsgWatch",
+    "disabled": false,
+    "short": "Help look for misbehaving users.",
+    "description": "Help look for misbehaving users by monitoring various aspects about sent messages.",
+    "tags": [],
+    "hidden": false
+}
