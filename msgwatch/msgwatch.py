@@ -48,7 +48,9 @@ class MsgWatch(commands.Cog):
     @checks.mod()
     async def add_user(self, ctx, user: discord.User):
         """Add a user to per-message monitoring."""
-        await self.config.guild(ctx.guild).monitored_users.append(user.id)
+        users = await self.config.guild(ctx.guild).monitored_users()
+        users.append(user.id)
+        await self.config.guild(ctx.guild).monitored_users.set(users)
         await ctx.send(f"Added user {user.mention} to monitored users.")
     
     @msg_watch.command()
