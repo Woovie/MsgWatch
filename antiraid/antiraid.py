@@ -33,11 +33,18 @@ class AntiRaid(commands.Cog):
     async def enable(self, ctx):
         if not self.enabled:
             channels = ctx.guild.channels
+            text_channels = []
             for channel in channels:
-                if type(channel) == discord.TextChannel:
-                    if channel.slowmode_delay == 0:
-                        self.channels.append(channel.id)
-                        await channel.edit(slowmode_delay=300)
+                if type(channel) == discord.TextChannel and channel.slowmode_delay == 0:
+                    text_channels.append(channel)
+            count = 0
+            message = await ctx.channel.send(f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
+            for channel in text_channels:
+                self.channels.append(channel.id)
+                await channel.edit(slowmode_delay=300)
+                count += 1
+                if count % 20 == 0 or count == len(text_channels):
+                    message.edit(content=f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
             self.enabled = True
             await ctx.channel.send("AntiRaid enabled.")
         else:
@@ -77,7 +84,7 @@ class AntiRaid(commands.Cog):
         #Discord data
         server_hash = {}
         embed_discord = discord.Embed(title='Server Information', type='rich', color=discord.Color(0xF5C800))
-        embed_discord.set_footer(text='Data from within guild')
+        embed_discord.set_footer(text='Slowmode data from within guild')
         channels = ctx.guild.channels
         for channel in channels:
             if type(channel) == discord.TextChannel:
