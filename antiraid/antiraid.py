@@ -48,7 +48,7 @@ class AntiRaid(commands.Cog):
     async def disable(self, ctx):
         if self.enabled:
             for channel_id in self.channels:
-                channel = ctx.guild.get_channel(channel_id)
+                channel = ctx.guild.get_channel(int(channel_id))
                 await channel.edit(slowmode_delay=0)
             self.enabled = False
             self.channels.clear()
@@ -62,8 +62,8 @@ class AntiRaid(commands.Cog):
         channels = ctx.guild.channels
         embed_antiraid = discord.Embed(title='AntiRaid Information', type='rich', color=discord.Color(0xF5C800))
         embed_antiraid.add_field(name='self.enabled', value=self.enabled)
-        for channel in self.channels:
-            channel = ctx.guild.get_channel(channel)
+        for channel_id in self.channels:
+            channel = ctx.guild.get_channel(int(channel_id))
             embed_antiraid.add_field(name=channel.name, value=channel.slowmode_delay)
         embed_discord = discord.Embed(title='Server Information', description='Channels with a delay', type='rich', color=discord.Color(0xF5C800))
         for channel in channels:
