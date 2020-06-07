@@ -11,6 +11,13 @@ class AntiRaid(commands.Cog):
         self.enabled = False
         self.config.register_guild(**default_guild)
 
+    @commands.group()
+    @checks.admin()
+    async def antiraid(self, ctx):
+        """All antiraid functions."""
+        pass
+
+    @antiraid.command()
     @checks.mod()
     async def enable(self, ctx):
         if not self.enabled:
@@ -25,6 +32,7 @@ class AntiRaid(commands.Cog):
         else:
             await ctx.channel.send("AntiRaid already enabled.")
 
+    @antiraid.command()
     @checks.mod()
     async def disable(self, ctx):
         if self.enabled:
@@ -35,4 +43,4 @@ class AntiRaid(commands.Cog):
             self.channels.clear()
             await ctx.channel.send("AntiRaid disabled.")
         else:
-            await ctx.channel.send("AntiRaid already disabled.")
+            await ctx.channel.send("AntiRaid alreadydisabled.")
