@@ -54,6 +54,7 @@ class AntiRaid(commands.Cog):
         embed_antiraid.add_field(name='self.channels', value=json.dumps(self.channels))
         embed_discord = discord.Embed(title='Server Information', description='Every channels and their current delay', type='rich', color=discord.Color(0xF5C800))
         for channel in channels:
-            embed_discord.add_field(name=channel.name, value=channel.slowmode_delay)
+            if type(channel) == discord.TextChannel:
+                embed_discord.add_field(name=channel.name, value=channel.slowmode_delay)
         await ctx.channel.send('', embed=embed_antiraid)
         await ctx.channel.send('', embed=embed_discord)
