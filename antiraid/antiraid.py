@@ -62,7 +62,7 @@ class AntiRaid(commands.Cog):
         #AntiRaid data
         antiraid_hash = {}
         embed_antiraid = discord.Embed(title='AntiRaid Information', type='rich', color=discord.Color(0xF5C800))
-        embed_antiraid.footer = 'Data from within AntiRaid class'
+        embed_antiraid.set_footer(text='Data from within AntiRaid class')
         embed_antiraid.add_field(name='self.enabled', value=self.enabled)
         for channel_id in self.channels:
             channel = ctx.guild.get_channel(int(channel_id))
@@ -77,7 +77,7 @@ class AntiRaid(commands.Cog):
         #Discord data
         server_hash = {}
         embed_discord = discord.Embed(title='Server Information', type='rich', color=discord.Color(0xF5C800))
-        embed_discord.footer = 'Data from within guild'
+        embed_discord.set_footer(text='Data from within guild')
         channels = ctx.guild.channels
         for channel in channels:
             slowmode = str(channel.slowmode_delay)
