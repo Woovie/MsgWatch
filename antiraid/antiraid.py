@@ -59,16 +59,32 @@ class AntiRaid(commands.Cog):
     @antiraid.command()
     @checks.mod()
     async def status(self, ctx):
-        channels = ctx.guild.channels
+        #AntiRaid data
+        antiraid_hash = {}
         embed_antiraid = discord.Embed(title='AntiRaid Information', type='rich', color=discord.Color(0xF5C800))
+        embed_antiraid.footer = 'Data from within AntiRaid class'
         embed_antiraid.add_field(name='self.enabled', value=self.enabled)
         for channel_id in self.channels:
             channel = ctx.guild.get_channel(int(channel_id))
-            embed_antiraid.add_field(name=channel.name, value=channel.slowmode_delay)
-        embed_discord = discord.Embed(title='Server Information', description='Channels with a delay', type='rich', color=discord.Color(0xF5C800))
-        for channel in channels:
-            if type(channel) == discord.TextChannel:
-                if channel.slowmode_delay > 0:
-                    embed_discord.add_field(name=channel.name, value=channel.slowmode_delay)
+            slowmode = str(channel.slowmode_delay)
+            if not slowmode in antiraid_hash:
+                antiraid_hash[slowmode] = 1
+            else:
+                antiraid_hash[slowmode] += 1
+        for slowmode, count in enumerate(antiraid_hash):
+            embed_antiraid.add_field(name=f"{slowmode} seconds", value=f"{count} channels")
         await ctx.channel.send('', embed=embed_antiraid)
+        #Discord data
+        server_hash = {}
+        embed_discord = discord.Embed(title='Server Information', type='rich', color=discord.Color(0xF5C800))
+        embed_discord.footer = 'Data from within guild'
+        channels = ctx.guild.channels
+        for channel in channels:
+            slowmode = str(channel.slowmode_delay)
+            if not slowmode in server_hash:
+                server_hash[slowmode] = 1
+            else:
+                server_hash[slowmode] += 1
+        for slowmode, count in enumerate(server_hash):
+            embed_discord.add_field(name=f"{slowmode} seconds", value=f"{count} channels")
         await ctx.channel.send('', embed=embed_discord)
