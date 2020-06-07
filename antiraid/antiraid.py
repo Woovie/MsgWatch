@@ -22,7 +22,7 @@ class AntiRaid(commands.Cog):
     async def enable_channel(self, ctx, channel_id):
         channel = ctx.guild.get_channel(int(channel_id))
         if type(channel) == discord.TextChannel:
-            response = channel.edit(slowmode_delay=300)
+            response = await channel.edit(slowmode_delay=300)
             self.channels.append(channel_id)
             await ctx.channel.send(f"Altered {channel_id}.\nresponse: {response}")
         else:
