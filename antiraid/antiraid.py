@@ -26,7 +26,7 @@ class AntiRaid(commands.Cog):
                 if type(channel) == discord.TextChannel:
                     if channel.slowmode_delay == 0:
                         self.channels.append(channel.id)
-                        channel.slowmode_delay = 300
+                        channel.edit(slowmode_delay=300)
             self.enabled = True
             await ctx.channel.send("AntiRaid enabled.")
         else:
@@ -38,7 +38,7 @@ class AntiRaid(commands.Cog):
         if self.enabled:
             for channel_id in self.channels:
                 channel = ctx.guild.get_channel(channel_id)
-                channel.slowmode_delay = 0
+                channel.edit(slowmode_delay=0)
             self.enabled = False
             self.channels.clear()
             await ctx.channel.send("AntiRaid disabled.")
@@ -51,7 +51,9 @@ class AntiRaid(commands.Cog):
         channels = ctx.guild.channels
         embed_antiraid = discord.Embed(title='AntiRaid Information', type='rich', color=discord.Color(0xF5C800))
         embed_antiraid.add_field(name='self.enabled', value=self.enabled)
-        embed_antiraid.add_field(name='self.channels', value=json.dumps(self.channels))
+        for channel in self.channels:
+            channel = ctx.guild.get_channel(channel)
+            embed_antiraid.add_field(name=channel.name, value=channel.slowmode_delay)
         embed_discord = discord.Embed(title='Server Information', description='Channels with a delay', type='rich', color=discord.Color(0xF5C800))
         for channel in channels:
             if type(channel) == discord.TextChannel:
