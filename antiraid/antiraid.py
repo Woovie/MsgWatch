@@ -1,4 +1,4 @@
-import discord
+import discord, json
 from datetime import datetime
 from redbot.core import commands, Config, checks
 
@@ -44,3 +44,16 @@ class AntiRaid(commands.Cog):
             await ctx.channel.send("AntiRaid disabled.")
         else:
             await ctx.channel.send("AntiRaid alreadydisabled.")
+
+    @antiraid.command()
+    @checks.mod()
+    async def status(self, ctx):
+        channels = ctx.guild.channels
+        embed_antiraid = discord.Embed(title='AntiRaid Information', type='rich', color=discord.Color(0xF5C800))
+        embed_antiraid.add_field(name='self.enabled', value=self.enabled)
+        embed_antiraid.add_field(name='self.channels', value=json.dumps(self.channels))
+        embed_discord = discord.Embed(title='Server Information', description='Every channels and their current delay', type='rich', color=discord.Color(0xF5C800))
+        for channel in channels:
+            embed_discord.add_field(name=channel.name, value=channel.slowmode_delay)
+        await ctx.channel.send('', embed=embed_antiraid)
+        await ctx.channel.send('', embed=embed_discord)
