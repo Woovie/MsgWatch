@@ -80,11 +80,12 @@ class AntiRaid(commands.Cog):
         embed_discord.set_footer(text='Data from within guild')
         channels = ctx.guild.channels
         for channel in channels:
-            slowmode = str(channel.slowmode_delay)
-            if not slowmode in server_hash:
-                server_hash[slowmode] = 1
-            else:
-                server_hash[slowmode] += 1
+            if type(channel) == discord.TextChannel:
+                slowmode = str(channel.slowmode_delay)
+                if not slowmode in server_hash:
+                    server_hash[slowmode] = 1
+                else:
+                    server_hash[slowmode] += 1
         for slowmode, count in enumerate(server_hash):
             embed_discord.add_field(name=f"{slowmode} seconds", value=f"{count} channels")
         await ctx.channel.send('', embed=embed_discord)
