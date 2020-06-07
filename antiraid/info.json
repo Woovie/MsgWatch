@@ -1,0 +1,10 @@
+{
+    "author": ["Woovie"],
+    "install_msg": "AntiRaid tools active.",
+    "name": "AntiRaid",
+    "disabled": false,
+    "short": "Prevent spam abuse across the server.",
+    "description": "Prevent spam abuse across the server.",
+    "tags": [],
+    "hidden": false
+}
