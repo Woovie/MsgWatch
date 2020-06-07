@@ -17,16 +17,16 @@ class AntiRaid(commands.Cog):
         """All antiraid functions."""
         pass
 
-    @antiraid.command()
-    @checks.mod()
-    async def enable_channel(self, ctx, channel_id):
-        channel = ctx.guild.get_channel(int(channel_id))
-        if type(channel) == discord.TextChannel:
-            response = await channel.edit(slowmode_delay=300)
-            self.channels.append(channel_id)
-            await ctx.channel.send(f"Altered {channel_id}.\nresponse: {response}")
-        else:
-            await ctx.channel.send(f"Invalid channel ID provided or other failure:\ntype(ctx.guild.get_channel(channel_id)): {type(channel)}")
+    # @antiraid.command()
+    # @checks.mod()
+    # async def enable_channel(self, ctx, channel_id):
+    #     channel = ctx.guild.get_channel(int(channel_id))
+    #     if type(channel) == discord.TextChannel:
+    #         await channel.edit(slowmode_delay=300)
+    #         self.channels.append(channel_id)
+    #         await ctx.channel.send(f"Altered {channel_id}.\nresponse: {response}")
+    #     else:
+    #         await ctx.channel.send(f"Invalid channel ID provided or other failure:\ntype(ctx.guild.get_channel(channel_id)): {type(channel)}")
 
     @antiraid.command()
     @checks.mod()
@@ -37,7 +37,7 @@ class AntiRaid(commands.Cog):
                 if type(channel) == discord.TextChannel:
                     if channel.slowmode_delay == 0:
                         self.channels.append(channel.id)
-                        channel.edit(slowmode_delay=300)
+                        await channel.edit(slowmode_delay=300)
             self.enabled = True
             await ctx.channel.send("AntiRaid enabled.")
         else:
@@ -49,7 +49,7 @@ class AntiRaid(commands.Cog):
         if self.enabled:
             for channel_id in self.channels:
                 channel = ctx.guild.get_channel(channel_id)
-                channel.edit(slowmode_delay=0)
+                await channel.edit(slowmode_delay=0)
             self.enabled = False
             self.channels.clear()
             await ctx.channel.send("AntiRaid disabled.")
