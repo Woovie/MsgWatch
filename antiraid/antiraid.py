@@ -27,18 +27,17 @@ class AntiRaid(commands.Cog):
                 if type(channel) == discord.TextChannel and channel.slowmode_delay == 0:
                     text_channels.append(channel)
             count = 0
-            message = await ctx.channel.send(f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
+            message = await ctx.channel.send(f"Starting AntiRaid enable process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
             for channel in text_channels:
                 self.channels.append(channel.id)
                 if not test:
                     await channel.edit(slowmode_delay=300)
                 else:
-                    time.sleep(1)
+                    time.sleep(0.1)
                 count += 1
                 if count % 20 == 0 or count == len(text_channels):
-                    await message.edit(content=f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
-            if not test:
-                self.enabled = True
+                    await message.edit(content=f"Starting AntiRaid enable process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
+            self.enabled = True
             await ctx.channel.send("AntiRaid enabled.")
         else:
             await ctx.channel.send("AntiRaid already enabled.")
@@ -47,10 +46,17 @@ class AntiRaid(commands.Cog):
     @checks.mod()
     async def disable(self, ctx, test = None):
         if self.enabled:
+            count = 0
+            message = await ctx.channel.send(f"Starting AntiRaid disable process, this will take a few seconds...\n{count}/{len(self.channels)} channels processed.")
             for channel_id in self.channels:
                 channel = ctx.guild.get_channel(int(channel_id))
                 if not test:
                     await channel.edit(slowmode_delay=0)
+                else:
+                    time.sleep(0.1)
+                count += 1
+                if count % 20 == 0 or count == len(self.channels):
+                    await message.edit(content=f"Starting AntiRaid disable process, this will take a few seconds...\n{count}/{len(self.channels)} channels processed.")
             self.enabled = False
             self.channels.clear()
             await ctx.channel.send("AntiRaid disabled.")
