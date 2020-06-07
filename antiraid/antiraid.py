@@ -71,8 +71,8 @@ class AntiRaid(commands.Cog):
                 antiraid_hash[slowmode] = 1
             else:
                 antiraid_hash[slowmode] += 1
-        for slowmode, count in enumerate(antiraid_hash):
-            embed_antiraid.add_field(name=f"{slowmode} seconds", value=f"{count} channels")
+        for slowmode in antiraid_hash:
+            embed_antiraid.add_field(name=f"{slowmode} seconds", value=f"{antiraid_hash[slowmode]} channels")
         await ctx.channel.send('', embed=embed_antiraid)
         #Discord data
         server_hash = {}
@@ -86,6 +86,6 @@ class AntiRaid(commands.Cog):
                     server_hash[slowmode] = 1
                 else:
                     server_hash[slowmode] += 1
-        for slowmode, count in enumerate(server_hash):
-            embed_discord.add_field(name=f"{slowmode} seconds", value=f"{count} channels")
+        for slowmode in server_hash:
+            embed_discord.add_field(name=f"{slowmode} seconds", value=f"{antiraid_hash[slowmode]} channels")
         await ctx.channel.send('', embed=embed_discord)
