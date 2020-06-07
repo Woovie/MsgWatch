@@ -1,4 +1,4 @@
-import discord, json
+import discord, json, time
 from datetime import datetime
 from redbot.core import commands, Config, checks
 
@@ -17,20 +17,9 @@ class AntiRaid(commands.Cog):
         """All antiraid functions."""
         pass
 
-    # @antiraid.command()
-    # @checks.mod()
-    # async def enable_channel(self, ctx, channel_id):
-    #     channel = ctx.guild.get_channel(int(channel_id))
-    #     if type(channel) == discord.TextChannel:
-    #         await channel.edit(slowmode_delay=300)
-    #         self.channels.append(channel_id)
-    #         await ctx.channel.send(f"Altered {channel_id}.\nresponse: {response}")
-    #     else:
-    #         await ctx.channel.send(f"Invalid channel ID provided or other failure:\ntype(ctx.guild.get_channel(channel_id)): {type(channel)}")
-
     @antiraid.command()
     @checks.mod()
-    async def enable(self, ctx):
+    async def enable(self, ctx, test = None):
         if not self.enabled:
             channels = ctx.guild.channels
             text_channels = []
@@ -41,22 +30,27 @@ class AntiRaid(commands.Cog):
             message = await ctx.channel.send(f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
             for channel in text_channels:
                 self.channels.append(channel.id)
-                await channel.edit(slowmode_delay=300)
+                if not test:
+                    await channel.edit(slowmode_delay=300)
+                else:
+                    time.sleep(1)
                 count += 1
                 if count % 20 == 0 or count == len(text_channels):
-                    message.edit(content=f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
-            self.enabled = True
+                    await message.edit(content=f"Starting AntiRaid process, this will take a few seconds...\n{count}/{len(text_channels)} channels processed.")
+            if not test:
+                self.enabled = True
             await ctx.channel.send("AntiRaid enabled.")
         else:
             await ctx.channel.send("AntiRaid already enabled.")
 
     @antiraid.command()
     @checks.mod()
-    async def disable(self, ctx):
+    async def disable(self, ctx, test = None):
         if self.enabled:
             for channel_id in self.channels:
                 channel = ctx.guild.get_channel(int(channel_id))
-                await channel.edit(slowmode_delay=0)
+                if not test:
+                    await channel.edit(slowmode_delay=0)
             self.enabled = False
             self.channels.clear()
             await ctx.channel.send("AntiRaid disabled.")
