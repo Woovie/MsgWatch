@@ -22,9 +22,9 @@ class AntiRaid(commands.Cog):
     async def enable_channel(self, ctx, channel_id):
         channel = ctx.guild.get_channel(int(channel_id))
         if type(channel) == discord.TextChannel:
-            channel.edit(slowmode_delay=300)
+            response = channel.edit(slowmode_delay=300)
             self.channels.append(channel_id)
-            await ctx.channel.send(f"Altered {channel_id}")
+            await ctx.channel.send(f"Altered {channel_id}.\nresponse: {response}")
         else:
             await ctx.channel.send(f"Invalid channel ID provided or other failure:\ntype(ctx.guild.get_channel(channel_id)): {type(channel)}")
 
@@ -54,7 +54,7 @@ class AntiRaid(commands.Cog):
             self.channels.clear()
             await ctx.channel.send("AntiRaid disabled.")
         else:
-            await ctx.channel.send("AntiRaid alreadydisabled.")
+            await ctx.channel.send("AntiRaid already disabled.")
 
     @antiraid.command()
     @checks.mod()
